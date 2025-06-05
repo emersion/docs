@@ -8,6 +8,7 @@ import { CoreMessage } from 'ai';
 import { useMemo } from 'react';
 
 import { fetchAPI } from '@/api';
+import { useConfig } from '@/core';
 import { Doc } from '@/docs/doc-management';
 
 const systemPrompts: Record<
@@ -47,6 +48,8 @@ const client = createBlockNoteAIClient({
  * Custom prompts can be invoked using the pattern !promptName in the AI input field.
  */
 export const useAI = (docId: Doc['id']) => {
+  const agentCursor = useConfig().data?.AI_BOT;
+
   return useMemo(() => {
     const openai = createOpenAI({
       ...client.getProviderSettings('openai'),
@@ -66,10 +69,7 @@ export const useAI = (docId: Doc['id']) => {
     const extension = createAIExtension({
       stream: false,
       model,
-      agentCursor: {
-        name: 'Albert',
-        color: '#8bc6ff',
-      },
+      agentCursor,
       // Create a custom promptBuilder that extends the default one
       promptBuilder: async (editor, opts): Promise<Array<CoreMessage>> => {
         const defaultPromptBuilder = llmFormats.html.defaultPromptBuilder;
@@ -107,5 +107,5 @@ export const useAI = (docId: Doc['id']) => {
     });
 
     return extension;
-  }, [docId]);
+  }, [agentCursor, docId]);
 };
