@@ -673,36 +673,6 @@ class VersionFilterSerializer(serializers.Serializer):
     )
 
 
-class AITransformSerializer(serializers.Serializer):
-    """Serializer for AI transform requests."""
-
-    action = serializers.ChoiceField(choices=AI_ACTIONS, required=True)
-    text = serializers.CharField(required=True)
-
-    def validate_text(self, value):
-        """Ensure the text field is not empty."""
-
-        if len(value.strip()) == 0:
-            raise serializers.ValidationError("Text field cannot be empty.")
-        return value
-
-
-class AITranslateSerializer(serializers.Serializer):
-    """Serializer for AI translate requests."""
-
-    language = serializers.ChoiceField(
-        choices=tuple(enums.ALL_LANGUAGES.items()), required=True
-    )
-    text = serializers.CharField(required=True)
-
-    def validate_text(self, value):
-        """Ensure the text field is not empty."""
-
-        if len(value.strip()) == 0:
-            raise serializers.ValidationError("Text field cannot be empty.")
-        return value
-
-
 class AIProxySerializer(serializers.Serializer):
     """Serializer for AI proxy requests."""
     
